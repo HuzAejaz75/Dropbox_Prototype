@@ -4,6 +4,7 @@
   "description": "273_lab1",
   "main": "app.js",
   "scripts": {
+    "start": "node app",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,6 +18,8 @@
     "body-parser": "*",
     "connect-flash": "*",
     "cookie-parser": "*",
+    "cors": "^2.8.4",
+    "ejs": "^2.5.7",
     "express": "*",
     "express-handlebars": "*",
     "express-messages": "*",
@@ -24,6 +27,7 @@
     "express-validator": "*",
     "mongodb": "*",
     "mongoose": "*",
+    "mysql": "^2.14.1",
     "passport": "*",
     "passport-http": "*",
     "passport-local": "*"
