@@ -25,11 +25,13 @@
     "express-messages": "*",
     "express-session": "*",
     "express-validator": "*",
+    "jsonwebtoken": "^8.0.1",
     "mongodb": "*",
     "mongoose": "*",
     "mysql": "^2.14.1",
     "passport": "*",
     "passport-http": "*",
+    "passport-jwt": "^3.0.0",
     "passport-local": "*"
   },
   "bugs": {

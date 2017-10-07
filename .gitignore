@@ -6,3 +6,7 @@ lib
 .nyc_output
 coverage
 es
+.idea/DropBox.iml
+.idea/modules.xml
+.idea/vcs.xml
+.idea/workspace.xml
