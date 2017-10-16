@@ -1,5 +1,6 @@
 const mysql = require('mysql');
 const bcrypt = require('bcryptjs');
+var fs = require("fs");
 const db = mysql.createPool({
     connectionLimit:50,
     host:'localhost',
@@ -27,11 +28,11 @@ module.exports={
             });
         });
     },
-    getOneUser: function(firstname,callback){
+    getOneUser: function(email,callback){
         console.log('what?')
-        console.log(firstname);
-        let sql = `SELECT * FROM UserCredentials WHERE FIRSTNAME = ?`;
-        let query = db.query(sql,firstname,callback);
+        console.log(email);
+        let sql = `SELECT * FROM UserCredentials WHERE EMAIL = ?`;
+        let query = db.query(sql,email,callback);
         console.log('querying');
         console.log(query);
     },
@@ -41,8 +42,52 @@ module.exports={
             if (err) throw err;
             callback(null,isMatch);
         })
+    },
+    
+    uploadfile: function(data,callback){
+        console.log('weeks');
+        console.log(data.id);
+        let sql = "Insert Into File_Uploads SET ?",
+        values = {
+            FileId:data.id,
+            EMAIL:'testuser3@gmail.com',
+            FILENAME: data.filename
+        }
+        let query = db.query(sql,values,callback);
+/*
+        fs.open(filepath, 'r', function (status, fd) {
+            if (status) {
+                console.log(status.message);
+                return;
+            }
+            const stats = fs.statSync(filepath)
+            const fileSizeInBytes = stats.size
+           
+            var buffer = new Buffer(fileSizeInBytes);
+            fs.read(fd, buffer, 0, fileSizeInBytes, 0, function (err, num) {
+                let sql = "Insert Into File_Uploads SET ?",
+                values = {
+                    FileId:'ascs130',
+                    EMAIL:'testuser3@gmail.com',
+                    FILE_DATA: buffer
+                }
+                let query = db.query(sql,values,callback);
+            });
+        });*/
+    },
+    downloadfile: function(email,callback){
+        console.log("downloading");
+        let sql = "Select FILE_DATA  FILE_DATA FROM File_Uploads WHERE EMAIL = ?";
+        let zyn = db.query(sql,email,callback);
+        
+       
+    },
+    getfiles: function(email,callback){
+        let sql = "Select FILENAME FROM File_Uploads WHERE EMAIL = ?";
+        let zyn = db.query(sql,email,callback);
     }
+   
 }
 
-    
+
 

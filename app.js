@@ -14,7 +14,7 @@ const port = 8080;
 //middleware
 app.use(cors());
 //get static folder for front-end
-app.use(express.static(path.join(__dirname,'public')));
+app.use(express.static(path.join(__dirname,'./react-src/public')));
 //body-parser
 
 app.use(bodyParser.json());
