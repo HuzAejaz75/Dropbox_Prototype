@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="application/xhtml+xml; charset=UTF-8" http-equiv="Content-Type"></meta>
+    <style type="text/css" media="all">
+.date {
+    mso-number-format: "Short Date";
+}
+td {
+    vertical-align: top;
+}
+    </style>
+  </head>
+  <body>
+    <table>
+      <thead>
+        <tr>
+          <th class="no-sort"><strong></strong>Customer Code</th>
+          <th class="no-sort"><strong></strong>Customer Name</th>
+          <th class="no-sort"><strong></strong>Team</th>
+          <th class="no-sort"><strong></strong>License ID</th>
+          <th class="no-sort"><strong></strong>Order</th>
+          <th class="no-sort"><strong></strong>Subscription Pack</th>
+          <th class="no-sort"><strong></strong>PO Number</th>
+          <th class="no-sort"><strong></strong>Issued</th>
+          <th class="no-sort"><strong></strong>Product</th>
+          <th class="no-sort"><strong></strong>Description</th>
+          <th class="no-sort"><strong></strong>Assigned</th>
+          <th class="no-sort"><strong></strong>Reg. name</th>
+          <th class="no-sort"><strong></strong>License key</th>
+          <th class="no-sort"><strong></strong>User</th>
+          <th class="no-sort"><strong></strong>Email</th>
+          <th class="no-sort"><strong></strong>Version</th>
+          <th class="no-sort"><strong></strong>License/Subscription Expiration</th>
+          <th class="no-sort"><strong></strong>Last seen</th>
+        </tr>
+      </thead>
+      <tr>
+        <td>2710065</td>
+        <td>Huzaifa Aejaz</td>
+        <td></td>
+        <td>BKVTUH8S7X</td>
+        <td>U368176686</td>
+        <td>Annual</td>
+        <td></td>
+        <td class="date">Jul 03, 2017</td>
+        <td>S.EDUP-Y</td>
+        <td>JetBrains Product Pack for Students - Free plan</td>
+        <td>Available</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td class="date">Jul 02, 2018</td>
+        <td class="date"></td>
+      </tr>
+    </table>
+  </body>
+</html>

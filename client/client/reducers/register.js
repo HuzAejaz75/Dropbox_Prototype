@@ -12,7 +12,6 @@ function register(state = [], action){
     switch(action.type){
         case 'REGISTER':
          firePost("http://localhost:8080/routes/register",action);
-         console.log('some');
          console.log(state);
          const newState = JSON.parse(JSON.stringify(state));
          return [{...newState[0],registered:true}]

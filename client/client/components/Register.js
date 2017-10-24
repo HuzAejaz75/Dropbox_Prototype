@@ -3,7 +3,6 @@ import {Link} from 'react-router';
 //import Comments from './Comments';
 const  Register = React.createClass({
     handleSubmit(e){
-        console.log('submitting');
         const firstname = this.refs.firstname.value;
         const lastname =this.refs.lastname.value;
         const email =this.refs.email.value;

@@ -12,7 +12,6 @@ var uuid = require('uuid');
 var storage = multer.diskStorage({
     destination:function(req,file,cb){
         console.log(file);
-        console.log('koi gaya');
         cb(null,path.join(__dirname,'../images/'));
     },
     filename:function(req,file,cb){
@@ -69,7 +68,6 @@ router.post('/upload',(req,res,next)=>{
 */
 
 router.post('/upload',upload.single('fileup'),(req,res,next)=>{
-    console.log('is it here');
     var data = {
         "id": uuid.v4(),
         "filename":req.file.originalname
@@ -108,7 +106,6 @@ router.post('/download',(req,res,next)=>{
         else
         if(rows[0]!=null){
            var hey =rows[0];
-           console.log("nuz");
            console.log(hey.FILE_DATA);
            fs.writeFile("../images/test.jpg", hey.FILE_DATA, (err,file)=>{
             if(err){
@@ -183,17 +180,31 @@ router.post('/login',(req,res,next)=>{
                 const token = jwt.sign({user},'mySecret',{
                     expiresIn:604800
                 });
-                res.json({
-                    success:true,
-                    token: 'JWT '+token,
-                    user:{
-                        id: user[0].id,
-                        firstname:user[0].FIRSTNAME,
-                        lastname:user[0].LASTNAME,
-                        password:user[0].PASSWORD,
-                        email:user[0].EMAIL
-                    }
-                });
+                dbmodel.getfiles(email,(err,files)=>{
+
+                if (err) throw err;
+
+                else{
+                    console.log("zebra");
+                    console.log(files[0].FILENAME);
+                    res.json({
+                        success:true,
+                        token: 'JWT '+token,
+                        user:{
+                            id: user[0].id,
+                            firstname:user[0].FIRSTNAME,
+                            lastname:user[0].LASTNAME,
+                            password:user[0].PASSWORD,
+                            email:user[0].EMAIL
+                        },
+                        filedata:{
+                            FILENAME: files[0].FILENAME
+                        }
+                    });
+                }
+                  
+                })
+            
 
             }
             else{
@@ -211,30 +222,20 @@ router.get('/profile',passport.authenticate('jwt',{session:false}),(req,res,next
     res.json({user: req.user});
 });
 
+
 router.get('/getalldata',(req,res,next)=>{
-    //in this function we will fetch all the files and throw them at the user as a array
-    //to do that we have to call the getall db which returns all the rows data and then we have to
-    //add it to res.json and send 
-    var email = req.query.action;
-    dbmodel.getfiles(email,(err,files)=>{
+    var email = req.query.email;
+    console.log('reached the query and prcessing data');
+    console.log(email);
+    dbmodel.getfiles(email,(err,data)=>{
         if(err){
-            console.log(err);
-            res.json({success:false,msg:'failed to upload'});
+            res.json({success:false,msg:'data is mismatched'});
         }
         else{
-            console.log('files');
-            var fileholder=[];
-            for(var i = 0; i < files.length; i++){
-                console.log('adding'+ files[i].FILENAME);
-                fileholder.push(files[i].FILENAME);
-            }
-            console.log(fileholder);
-            var file_data =JSON.stringify(fileholder);
-            console.log(file_data);
-            res.json({success:true,msg:'upload successful',file_data:fileholder});
+            res.json(data);
         }
     });
+})
 
-    });
 
 module.exports = router;

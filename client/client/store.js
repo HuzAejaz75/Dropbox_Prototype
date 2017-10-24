@@ -1,10 +1,12 @@
-import {createStore, compose} from 'redux';
+import {createStore, compose,applyMiddleware} from 'redux';
 import {syncHistoryWithStore} from 'react-router-redux';
 import {browserHistory} from 'react-router';
-
+import thunk from 'redux-thunk'
 import rootReducer from './reducers/index';
 import comments from './data/comments';
 import posts from './data/posts';
+import axios from 'axios';
+
 
 const register=[{
     registered:false,
@@ -16,15 +18,15 @@ const login=[{
     verified:false,
     token:null,
     user:null,
+    filedata:null,
     error:null
 }]
 
-const filedetails=[{
-    fileid:null,
-    filename: null,
-    filepath:null,
-    starred: false
+const filedetails = [{
+    filedata:null
 }]
+
+
 
 const defaultState= {
     posts,
@@ -33,11 +35,12 @@ const defaultState= {
     login,
     filedetails
 }
-
+//remember
 const enhancers = compose(
     window.devToolsExtension ? window.devToolsExtension() : f => f
 );
-const store = createStore(rootReducer,defaultState,enhancers);
+const middleware = applyMiddleware(thunk);
+const store = createStore(rootReducer,defaultState,middleware);
 
 export const history = syncHistoryWithStore(browserHistory,store);
 

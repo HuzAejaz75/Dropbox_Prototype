@@ -2,102 +2,68 @@ import React from 'react';
 import {Link,Redirect} from 'react-router';
 import localstorage from 'local-storage';
 import axios from 'axios';
+import Leftpanel from './Leftpanel';
+import FilesList from './FilesList'
 
 
 //import Comments from './Comments';
 const  FileDashBoard = React.createClass({
    
     handleSubmit(e){
-       /* console.log('uploading file');
-        console.log(e);
-        console.log(this.refs.fileup.files);
-        //const pl = new FormData();
-        
-       //pl.append('fileup', this.refs.fileup.files);
-        var fullPath =this.refs.fileup.value;
-       
-      
-        var startIndex = (fullPath.indexOf('\\') >= 0 ? fullPath.lastIndexOf('\\') : fullPath.lastIndexOf('/'));
-        var filename = fullPath.substring(startIndex);
-        if (filename.indexOf('\\') === 0 || filename.indexOf('/') === 0) {
-            filename = filename.substring(1);
-        }
-        alert(filename);  
-        console.log('nop');
-        console.log(this.refs.fileup.files.File);
-       // this.props.uploadFile(pl);*/
 
-        console.log(this.refs.fileup.files[0]);
-        const pl = new FormData();
-        
-       pl.append('fileup', this.refs.fileup.files[0]);
-       this.props.uploadFile(pl);
-       var user =localstorage.get('user')
-       {this.props.getallfiles(user.email)}
-       
+        console.log(this.refs.fileup.files[0].name);
+        const pl = new FormData();   
+        pl.append('fileup', this.refs.fileup.files[0]);
+        this.props.uploadFile(pl);
+        var user = localstorage.get('user');
+        this.getfilesnow()
         e.preventDefault();
-    },
+        },
+        getfilesnow(){
+            axios.get("http://localhost:8080/routes/getalldata",{params:{email:localstorage.get('userdata')}}).then(
+                (res)=>{
+                    console.log(res)
+                   localstorage.set('fileData',res.data);
+                   this.props.getallfiles(res.data)
+                });
+        },
     filelist(){
         {this.props.getallfiles(email)}
         return(
-            <div >
+            <div>
                  <strong>file</strong>   
             </div>
         );
     },
-    
+    handleLogout(e){
+        localstorage.clear();
+        this.props.history.push('/login');
+        e.preventDefault();
+    },
     
     render(){
         
-       if(localstorage.get('user')!==null){
-                
-            
-                
-                var user = localstorage.get('user')
-                var email = user.email;
-        
-                var files = localstorage.get('filenamearray')
-                this.state = {files}
-            
+       if(localstorage.get('userdata')!==null){
+                var filedetails = this.props.filedetails;
+                console.log('macs');
+                console.log(filedetails)
        
-        
-            return(
-                            <div>   
-                                <div className="col-md-2 col-md-offset-9">
+            return(    
+                           <div style={{"display":"flex", "flexDirection":"row"}}>   
+                                <Leftpanel  />  
+                                <div onClick={this.handleLogout}>Logout</div>
+                                <FilesList {...this.props}  fileData = {filedetails} />
+                                <div className="col-md-1 col-md-offset-5" style={{"float":"left"}} >
                                 <form ref="fileupload" onChange={this.handleSubmit} >
                                         <div id="fileupload" style={{"height":"20px", "width":"100px"}}>
                                             <input  type="file" ref="fileup" name="fileup" id="myFile" style={{"opacity":"0.5"}} />
-                                            <input type="submit" value="Upload files" className="btn btn-primary" style={{"background-color":"#1167fb"}}/>
+                                            <input type="submit" value="Upload files" className="btn btn-primary" style={{"backgroundColor":"#1167fb"}}/>
                                         </div>
-                                </form></div>
-                       <div className="col-md-2 col-md-offset-3">
-                      
-                       <div className="well" style={{"width":"550px"}}>
-                            {this.state.files.map((file)=>{
-                                    return(
-                                            
-                                            <ul className="list-group">
-                                            <li className="list-group-item">{file}</li>
-                                            </ul>
-                                        )
-                                        
-                                            
-                                    })}
-                                    </div>
-                        </div>
-                            
+                                </form>
+                                </div>
                             </div>
-                           
-                        
-       
-                    
-                   
-                   
                 )
         }
     }
-        
-   
-    
 });
 export default  FileDashBoard;

@@ -29,11 +29,9 @@ module.exports={
         });
     },
     getOneUser: function(email,callback){
-        console.log('what?')
         console.log(email);
         let sql = `SELECT * FROM UserCredentials WHERE EMAIL = ?`;
         let query = db.query(sql,email,callback);
-        console.log('querying');
         console.log(query);
     },
     passwordMatch:function(sentPassword,hash,callback){
@@ -45,7 +43,6 @@ module.exports={
     },
     
     uploadfile: function(data,callback){
-        console.log('weeks');
         console.log(data.id);
         let sql = "Insert Into File_Uploads SET ?",
         values = {
@@ -76,14 +73,11 @@ module.exports={
         });*/
     },
     downloadfile: function(email,callback){
-        console.log("downloading");
-        let sql = "Select FILE_DATA  FILE_DATA FROM File_Uploads WHERE EMAIL = ?";
-        let zyn = db.query(sql,email,callback);
-        
-       
+        let sql = "Select FILE_DATA FROM File_Uploads WHERE EMAIL = ?";
+        let zyn = db.query(sql,email,callback); 
     },
     getfiles: function(email,callback){
-        let sql = "Select FILENAME FROM File_Uploads WHERE EMAIL = ?";
+        let sql = "Select * FROM File_Uploads WHERE EMAIL = ?";
         let zyn = db.query(sql,email,callback);
     }
    
