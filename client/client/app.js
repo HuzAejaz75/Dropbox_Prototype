@@ -22,7 +22,7 @@ const router = (
                <Route path="/photogrid" component={PhotoGrid}></Route>
                <Route path="/FileDashBoard" >
                 <IndexRoute component={FileDashBoard}></IndexRoute>
-                <Route path="/FileDashBoard/Groups" component={Groups} ></Route>
+                <Route path="/FileDashBoard/Groups" component={Groups}> </Route>
                </Route>
                <Route path="/view/:photoid" component={Single}></Route>
             </Route>

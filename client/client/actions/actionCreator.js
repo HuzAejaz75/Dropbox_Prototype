@@ -91,11 +91,18 @@ export function getallfiles(data){
 
 
 export function updateFileList(data){
-    console.log("rz34 has been called...");
+   
     console.log(data);
     return{
         type:"UPDATE_ALL_FILES",
         data
     }
    
+}
+
+export function getGroups(data){
+    return{
+        type:"GET_GROUPS",
+        data
+    }
 }

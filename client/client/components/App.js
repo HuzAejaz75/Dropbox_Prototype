@@ -10,7 +10,8 @@ return {
     comments:state.comments,
     register:state.register,
     login:state.login,
-    filedetails:state.filedetails
+    filedetails:state.filedetails,
+    groupdata:state.groupdata
 }
 }
 function mapDispatchToProps(dispatch){

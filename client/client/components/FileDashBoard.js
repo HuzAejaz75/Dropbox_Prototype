@@ -47,10 +47,10 @@ const  FileDashBoard = React.createClass({
                 var filedetails = this.props.filedetails;
                 console.log('macs');
                 console.log(filedetails)
-       
+        if(filedetails.filedata){
             return(    
                            <div style={{"display":"flex", "flexDirection":"row"}}>   
-                                <Leftpanel  />  
+                                <Leftpanel />  
                                 <div onClick={this.handleLogout}>Logout</div>
                                 <FilesList {...this.props}  fileData = {filedetails} />
                                 <div className="col-md-1 col-md-offset-5" style={{"float":"left"}} >
@@ -63,6 +63,26 @@ const  FileDashBoard = React.createClass({
                                 </div>
                             </div>
                 )
+            }
+            else{
+                return( <div style={{"display":"flex", "flexDirection":"row"}}>   
+                <Leftpanel  />  
+                <div onClick={this.handleLogout}>Logout</div>
+                <div className="col-md-1 col-md-offset-5" style={{"float":"left"}} >
+                                <form ref="fileupload" onChange={this.handleSubmit} >
+                                        <div id="fileupload" style={{"height":"20px", "width":"100px"}}>
+                                            <input  type="file" ref="fileup" name="fileup" id="myFile" style={{"opacity":"0.5"}} />
+                                            <input type="submit" value="Upload files" className="btn btn-primary" style={{"backgroundColor":"#1167fb"}}/>
+                                        </div>
+                                </form>
+                                </div>
+               
+
+                </div>
+                )
+            }
+
+
         }
     }
 });

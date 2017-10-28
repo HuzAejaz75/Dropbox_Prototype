@@ -22,9 +22,13 @@ const login=[{
     error:null
 }]
 
-const filedetails = [{
-    filedata:null
-}]
+const filedetails = {
+    filedata: null
+}
+
+const groupdata = {
+    data:null
+}
 
 
 
@@ -33,7 +37,8 @@ const defaultState= {
     comments,
     register,
     login,
-    filedetails
+    filedetails,
+    groupdata
 }
 //remember
 const enhancers = compose(

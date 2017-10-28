@@ -2,9 +2,20 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var path = require('path');
 var expressValidator = require('express-validator');
-var mysql = require('mysql');
+var mongoose = require('mongoose');
+var config = require('./config/mongoConfig');
 var cors = require('cors');
 var passport = require('passport');
+
+
+mongoose.connect(config.database);
+mongoose.connection.on('connected',()=>{
+    console.log('connected to db '+ config.database);
+})
+
+mongoose.connection.on('error',(err )=>{
+    console.log('error in db '+ err);
+})
 
 var app = express();
 const routes= require('./routes/login');

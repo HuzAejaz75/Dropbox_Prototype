@@ -50,7 +50,6 @@ function login(state =[], action){
             token:localstorage.get('token'),
             user:localstorage.get('user'),
             filedata:localstorage.get('filedata')}]
-           
             break;
 
 

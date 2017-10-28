@@ -8,6 +8,9 @@ var formidable = require('formidable');
 var multer = require('multer');
 var path = require('path');
 var uuid = require('uuid');
+var UserCreds  = require('../models/mongomodels');
+var FileData = require('../models/filedatamodel');
+var GroupData = require('../models/group_names');
 
 var storage = multer.diskStorage({
     destination:function(req,file,cb){
@@ -23,13 +26,13 @@ var upload = multer({storage:storage});
 
 router.post('/register',(req,res,next)=>{
     console.log('entered');
-    let newUser = {
+    let newUser = new UserCreds({
         FIRSTNAME: req.body.firstname,
         LASTNAME:  req.body.lastname,
         PASSWORD:  req.body.password,
         EMAIL:     req.body.email
-    }
-    dbmodel.addUser(newUser,(err,wow)=>{
+    });
+    UserCreds.addUser(newUser,(err,user)=>{
         if(err)
         {
             res.json({success:false,msg:'failed to register user'})
@@ -39,6 +42,22 @@ router.post('/register',(req,res,next)=>{
             res.json({success:true,msg:'registered'});
         }
     });
+    
+    /*mysql code
+    dbmodel.addUser(newUser,(err,wow)=>{
+        if(err)
+        {
+            res.json({success:false,msg:'failed to register user'})
+        }
+        else
+        {
+            res.json({success:true,msg:'registered'});
+        }
+    });*/
+
+//mongodb code
+
+
 });
 /*
 router.post('/upload',(req,res,next)=>{
@@ -72,8 +91,8 @@ router.post('/upload',upload.single('fileup'),(req,res,next)=>{
         "id": uuid.v4(),
         "filename":req.file.originalname
     }
-
-    dbmodel.uploadfile(data,(err,file)=>{
+    //dbmodel.uploadfile(data,(err,file)=>{
+ FileData.uploadfile(data,(err,file)=>{
         if(err){
             console.log(err);
             res.json({success:false,msg:'failed to upload'});
@@ -83,8 +102,6 @@ router.post('/upload',upload.single('fileup'),(req,res,next)=>{
             res.json({success:true,msg:'upload successful',});
         }
     });
-
-    
 });
 
 router.get('/getsessiondata',(req,res,next)=>{
@@ -165,47 +182,30 @@ router.post('/login',(req,res,next)=>{
     const email = req.body.email;
     const password = req.body.password;
    
-    dbmodel.getOneUser(email,(err,user)=>{
+//dbmodel.getOneUser(email,(err,user)=>{
+    UserCreds.getUserByEmail(email,(err,user)=>{
         if(err) throw err;
         if(!user){
             return res.json({success:false,msg:'user not found'});
         }
        
-        
-        //console.log(user[0].PASSWORD);
-        
-        dbmodel.passwordMatch(password,user[0].PASSWORD,(err,isMatch)=>{
+        UserCreds.passwordMatch(password,user.PASSWORD,(err,isMatch)=>{
             if(err) throw err;
             if(isMatch){
                 const token = jwt.sign({user},'mySecret',{
                     expiresIn:604800
                 });
-                dbmodel.getfiles(email,(err,files)=>{
-
-                if (err) throw err;
-
-                else{
-                    console.log("zebra");
-                    console.log(files[0].FILENAME);
                     res.json({
                         success:true,
                         token: 'JWT '+token,
                         user:{
-                            id: user[0].id,
-                            firstname:user[0].FIRSTNAME,
-                            lastname:user[0].LASTNAME,
-                            password:user[0].PASSWORD,
-                            email:user[0].EMAIL
-                        },
-                        filedata:{
-                            FILENAME: files[0].FILENAME
+                            id: user.id,
+                            firstname:user.FIRSTNAME,
+                            lastname:user.LASTNAME,
+                            password:user.PASSWORD,
+                            email:user.EMAIL
                         }
                     });
-                }
-                  
-                })
-            
-
             }
             else{
                 return res.json({success:false,msg:'wrong password'});  
@@ -225,11 +225,9 @@ router.get('/profile',passport.authenticate('jwt',{session:false}),(req,res,next
 
 router.get('/getalldata',(req,res,next)=>{
     var email = req.query.email;
-    console.log('reached the query and prcessing data');
-    console.log(email);
-    dbmodel.getfiles(email,(err,data)=>{
+    FileData.getfiles(email,(err,data)=>{
         if(err){
-            res.json({success:false,msg:'data is mismatched'});
+            res.json({success:false,msg:'Data is mismatched'});
         }
         else{
             res.json(data);
@@ -237,5 +235,33 @@ router.get('/getalldata',(req,res,next)=>{
     });
 })
 
+router.post('/groupadd',(req,res,next)=>{
+    var groupname = req.body.grp_name;
+    var admin = req.body.admin;
+    console.log('group name to be deleted'+ groupname);
+    var data = {
+        groupname: groupname,
+        admin:admin
+    }
+    GroupData.addGroup(data,(err,group)=>{
+        if(err) throw err;
+        else{
+            GroupData.getAllGroups(admin,(err,groups)=>{
+                res.json(groups);
+            })
+        }
+    });
+});
+
+router.get('/groupsget',(req,res,next)=>{
+   var email=req.query.email;
+   console.log(email);
+    GroupData.getAllGroups(email,(err,groups)=>{
+        if(err) throw err;
+        else{
+                res.json(groups);
+            }
+        });
+    });
 
 module.exports = router;

@@ -40,7 +40,7 @@ function firePost(url,action){
         case 'GET_ALL_FILES':
         console.log('GET_ALL_FILES...');
         console.log(action.data)
-        return {...state[0],filedata: action.data};
+        return {...state[0],filedata:action.data};
         break; 
         default:
         return state;

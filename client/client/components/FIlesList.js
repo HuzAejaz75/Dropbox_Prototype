@@ -25,7 +25,7 @@ const  FilesList = React.createClass({
                         {console.log('Weeks of welcome...')}
                             {console.log(this.props.filedetails)}
                             
-                             {this.props.fileData.filedata.map(this.renderList)}
+                             {this.props.filedetails.filedata.map(this.renderList)}
                               
                            
                         </ul>
