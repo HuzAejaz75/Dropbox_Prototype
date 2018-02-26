@@ -11,6 +11,8 @@ var uuid = require('uuid');
 var UserCreds  = require('../models/mongomodels');
 var FileData = require('../models/filedatamodel');
 var GroupData = require('../models/group_names');
+var GroupRawData = require('../models/group_rawdata');
+var kafka = require('./kafka/client');
 
 var storage = multer.diskStorage({
     destination:function(req,file,cb){
@@ -18,7 +20,7 @@ var storage = multer.diskStorage({
         cb(null,path.join(__dirname,'../images/'));
     },
     filename:function(req,file,cb){
-        cb(null,Date.now()+file.fieldname);
+        cb(null,Date.now()+file.originalname);
     }
 });
 
@@ -42,57 +44,28 @@ router.post('/register',(req,res,next)=>{
             res.json({success:true,msg:'registered'});
         }
     });
-    
-    /*mysql code
-    dbmodel.addUser(newUser,(err,wow)=>{
-        if(err)
-        {
-            res.json({success:false,msg:'failed to register user'})
-        }
-        else
-        {
-            res.json({success:true,msg:'registered'});
-        }
-    });*/
-
-//mongodb code
-
-
 });
-/*
-router.post('/upload',(req,res,next)=>{
 
-    
-    var form = new formidable.IncomingForm();
-    console.log(req.body.filepath);
-    form.parse(req, function (err, fields, files) {
-        console.log('if you persist resist and keep on moving.very easy.');
-        var oldpath = files.filetoupload.path;
-        console.log('oldpath');
-        console.log(oldpath);
-    });
-   // console.log(req.body.filepath);
-    //let filepath = req.body.filepath;
-
-    dbmodel.uploadfile(filepath,(err,file)=>{
-        if(err){
-            console.log(err);
-            res.json({success:false,msg:'failed to upload'});
-        }
-        else{
-            res.json({success:true,msg:'upload successful'});
-        }
-    });
-});
-*/
 
 router.post('/upload',upload.single('fileup'),(req,res,next)=>{
     var data = {
         "id": uuid.v4(),
         "filename":req.file.originalname
     }
+
+    kafka.make_request('dropboxlogin_topic',{"data":data,"type":"upload_files"}, function(err,results){
+        if(err){
+            res.json({success:false,msg:'Data is mismatched'});
+        }
+        else{
+            res.json(results);
+        }
+
+    });
+        // upload_files
+
     //dbmodel.uploadfile(data,(err,file)=>{
- FileData.uploadfile(data,(err,file)=>{
+/*FileData.uploadfile(data,(err,file)=>{
         if(err){
             console.log(err);
             res.json({success:false,msg:'failed to upload'});
@@ -101,7 +74,7 @@ router.post('/upload',upload.single('fileup'),(req,res,next)=>{
            
             res.json({success:true,msg:'upload successful',});
         }
-    });
+    });*/
 });
 
 router.get('/getsessiondata',(req,res,next)=>{
@@ -123,7 +96,7 @@ router.post('/download',(req,res,next)=>{
         else
         if(rows[0]!=null){
            var hey =rows[0];
-           console.log(hey.FILE_DATA);
+         
            fs.writeFile("../images/test.jpg", hey.FILE_DATA, (err,file)=>{
             if(err){
                 console.log(err);
@@ -133,7 +106,7 @@ router.post('/download',(req,res,next)=>{
                 res.json({success:true,msg:'download successful'});
             }
         });
-           //console.log(bufferBase64);
+          
             
             res.json({success:true,msg:'download was successful'});
         }
@@ -143,36 +116,7 @@ router.post('/download',(req,res,next)=>{
        
             
         
-        /*else{
-            
-            var buffer = new Buffer( file );
-            var bufferBase64 = buffer.toString('base64');
-            console.log("yahan pyaar");
-            console.log(bufferBase64);
-            /*var matches = data.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/),
-            response = {};
-        
-            if (matches.length !== 3) {
-                return new Error('Invalid input string');
-            }
-        
-            response.type = matches[1];
-            response.data = new Buffer(matches[2], 'base64');
-            
-            //var buffer = new Buffer( file );
-            //var bufferBase64 = data.toString('base64');
-           
-            fs.writeFile("/Users/huzaifa.aejaz/Documents/DropBox/images/test.jpg", bufferBase64, (err,file)=>{
-                if(err){
-                    console.log(err);
-                    res.json({success:false,msg:'failed to upload'});
-                }
-                else{
-                    res.json({success:true,msg:'download successful'});
-                }
-            });
-            res.json({success:true,msg:'download.....successful'});
-    }*/
+      
     });
 });
 
@@ -181,8 +125,6 @@ router.post('/download',(req,res,next)=>{
 router.post('/login',(req,res,next)=>{
     const email = req.body.email;
     const password = req.body.password;
-   
-//dbmodel.getOneUser(email,(err,user)=>{
     UserCreds.getUserByEmail(email,(err,user)=>{
         if(err) throw err;
         if(!user){
@@ -225,20 +167,32 @@ router.get('/profile',passport.authenticate('jwt',{session:false}),(req,res,next
 
 router.get('/getalldata',(req,res,next)=>{
     var email = req.query.email;
-    FileData.getfiles(email,(err,data)=>{
+    kafka.make_request('dropboxlogin_topic',{"email":email,"type":"get_files"}, function(err,results){
+   
+       
+        if(err){
+            res.json({success:false,msg:'Data is mismatched'});
+        }
+        else{
+            res.json(results);
+        }
+   
+   
+        /*FileData.getfiles(email,(err,data)=>{
         if(err){
             res.json({success:false,msg:'Data is mismatched'});
         }
         else{
             res.json(data);
         }
-    });
-})
+    });*/
+});
+});
 
 router.post('/groupadd',(req,res,next)=>{
     var groupname = req.body.grp_name;
     var admin = req.body.admin;
-    console.log('group name to be deleted'+ groupname);
+   
     var data = {
         groupname: groupname,
         admin:admin
@@ -246,22 +200,88 @@ router.post('/groupadd',(req,res,next)=>{
     GroupData.addGroup(data,(err,group)=>{
         if(err) throw err;
         else{
-            GroupData.getAllGroups(admin,(err,groups)=>{
+            //add the user to the rawdata group as well
+            var data = {
+                groupname: groupname,
+                email:admin,
+                permission:"Admin",
+                admin:admin
+            }//here we are adding the data to the raw grou[]
+            GroupRawData.addRawData(data,(err,group)=>{
+                if(err) throw err;
+                else{
+                   
+                    GroupRawData.getRawData(data.email,(err,records)=>{
+                          
+                           GroupRawData.getAllData(data.groupname,(err,entries)=>{
+                            if(err)throw err;
+                            else{
+                                console.log(entries.length);
+                                console.log(res.json({users:entries.length,records:records}));
+                            }
+                           });
+                           console.log(records); 
+                          
+                    });
+                }
+            });
+           /* GroupData.getAllGroups(admin,(err,groups)=>{
                 res.json(groups);
-            })
+            })*/
         }
     });
 });
 
 router.get('/groupsget',(req,res,next)=>{
    var email=req.query.email;
-   console.log(email);
+   
     GroupData.getAllGroups(email,(err,groups)=>{
         if(err) throw err;
         else{
+                
+                console.log(groups);
                 res.json(groups);
             }
         });
     });
+
+
+    router.post('/grouprawdata',(req,res,next)=>{
+       
+        var groupname = req.body.grp_name;
+        var email = req.body.email;
+        var permission = req.body.permission;
+
+        var data = {
+            groupname: groupname,
+            email:email,
+            permission:permission
+        }
+        GroupData.getAdmin(groupname,(err,admin)=>{
+            if(err) throw err;
+            else{
+                data.admin = admin.ADMIN;
+                GroupRawData.addRawData(data,(err,group)=>{
+                    if(err) throw err;
+                    else{
+                        
+                        console.log(group);
+                    }
+                });
+            }
+        });// we have to link it up
+    
+});
+
+router.get('/memberdata',(req,res,next)=>{
+    var groupnm = "Admins_Group";//req.body.groupname;
+    GroupRawData.getMemeberData(groupnm,(err,list)=>{
+        if(err) throw err;
+        else{
+            console.log(list);
+            res.json(list);
+        }
+    })
+});
 
 module.exports = router;

@@ -4,7 +4,7 @@ const db = mysql.createPool({
     connectionLimit:50,
     host:'localhost',
     user:'root',
-    password:'12345',
+    password:'root',
     database:'dropbox_userdb'
 });
 db.getConnection((err)=>{

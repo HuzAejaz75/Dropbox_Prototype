@@ -3,27 +3,27 @@ import {Link} from 'react-router';
 import CSSTransitionGroup from 'react-addons-css-transition-group';
 import localstorage from 'local-storage';
 import filedetails from '../data/fetch_files';
+import './App.css';
 const  FilesList = React.createClass({
 
 
     renderList(file){
-        console.log('file');
-        console.log(file);
+     
            return(
-               <li key={file.FileId}>{file.FILENAME}</li>
+               <li className="list-group-item oneRow" style={{"display":"flex",    "flexDirection":"row","height":"60px","borderLeft":"1px solid transparent","borderRight":"1px solid transparent","width":"750px","fontColor":"#3d464d","fontSize":"15px","lineHeight":"24px"}} key={file.FileId+' '+file.FILENAME}>{file.FILENAME} <div className={(file.STARRED)?"starred":"unstarred"} onClick={this.props.toggleStar.bind(null,file.FileId)}> </div></li>
            )
        
         },
+      
     render(){
-        console.log('mark 1');
-        console.log(this.props.fileData.filedata)
+        
+      
        
             return(
-                <div className="col-md-2 col-md-offset-3">
-                    <div className="well" style={{"width":"550px"}}> 
+                <div className="col-md-2 ">
+                    <div  style={{"width":"550px"}}> 
                         <ul>
-                        {console.log('Weeks of welcome...')}
-                            {console.log(this.props.filedetails)}
+                       
                             
                              {this.props.filedetails.filedata.map(this.renderList)}
                               

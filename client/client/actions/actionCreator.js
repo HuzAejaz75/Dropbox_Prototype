@@ -100,9 +100,31 @@ export function updateFileList(data){
    
 }
 
-export function getGroups(data){
+export function getGroups(data,size){
+   console.log("rainiy da");
+   console.log(data);
+   console.log(data);
+   console.log("rainiy da");
     return{
         type:"GET_GROUPS",
-        data
+        data:data,
+        size:size
     }
 }
+
+export function memberdata(info){
+    return{
+        type:'MEMBER_DATA',
+        info:info
+    }
+}
+
+export function toggleStar(id){
+    return{
+        type:'TOGGLE_STAR',
+        id:id
+    }
+}
+
+
+

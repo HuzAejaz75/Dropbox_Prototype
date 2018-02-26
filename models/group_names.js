@@ -18,7 +18,7 @@ const groupData = mongoose.Schema({
 const GroupData = module.exports = mongoose.model('GroupData',groupData);
 
 module.exports.addGroup = function(data,callback){
-    console.log
+   
     values = new GroupData({
         GROUPNAME:data.groupname,
         ADMIN:data.admin
@@ -29,4 +29,9 @@ module.exports.addGroup = function(data,callback){
 module.exports.getAllGroups = function(email,callback){
     const query = {ADMIN:email}
     GroupData.find(query,callback);
+}
+
+module.exports.getAdmin = function(groupname,callback){
+    const query = {GROUPNAME:groupname};
+    GroupData.findOne(query,callback);
 }

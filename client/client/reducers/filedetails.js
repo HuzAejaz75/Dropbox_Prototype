@@ -24,8 +24,7 @@ function firePost(url,action){
                 body: action.payload
             })
             .then(res => {
-                console.log(res);
-                //return res.status;        
+              
                 return 200;
             })
             .catch(error => {
@@ -37,11 +36,19 @@ function firePost(url,action){
                 state
              ]
         break;
+        
         case 'GET_ALL_FILES':
-        console.log('GET_ALL_FILES...');
-        console.log(action.data)
+       
         return {...state[0],filedata:action.data};
         break; 
+
+        case 'TOGGLE_STAR':
+       
+        console.log(action.id);
+        console.log('spokitos');
+        
+        //console.log(...state[0].findIndex((file)=>{console.log('file')}));
+        
         default:
         return state;
     }

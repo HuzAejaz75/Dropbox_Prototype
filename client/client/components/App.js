@@ -11,7 +11,9 @@ return {
     register:state.register,
     login:state.login,
     filedetails:state.filedetails,
-    groupdata:state.groupdata
+    groupdata:state.groupdata,
+    groupmembers: state.groupmembers
+   
 }
 }
 function mapDispatchToProps(dispatch){

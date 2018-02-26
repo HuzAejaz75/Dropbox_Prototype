@@ -27,7 +27,12 @@ const filedetails = {
 }
 
 const groupdata = {
-    data:null
+    data:null,
+    size:0
+}
+
+const groupmembers = {
+    members1:null
 }
 
 
@@ -38,7 +43,8 @@ const defaultState= {
     register,
     login,
     filedetails,
-    groupdata
+    groupdata,
+    groupmembers
 }
 //remember
 const enhancers = compose(

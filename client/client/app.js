@@ -7,6 +7,7 @@ import Register from './components/Register'
 import Login from './components/Login'
 import FileDashBoard from './components/FileDashBoard'
 import Groups from './components/Groups'
+import UserDetails from './components/UserDetails'
 
 import {Router, Route, IndexRoute, browserHistory} from 'react-router';
 import {Provider} from 'react-redux';
@@ -23,6 +24,8 @@ const router = (
                <Route path="/FileDashBoard" >
                 <IndexRoute component={FileDashBoard}></IndexRoute>
                 <Route path="/FileDashBoard/Groups" component={Groups}> </Route>
+               </Route>
+               <Route path="/UserDetails" component={UserDetails}>
                </Route>
                <Route path="/view/:photoid" component={Single}></Route>
             </Route>

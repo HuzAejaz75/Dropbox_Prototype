@@ -4,9 +4,9 @@ import localstorage from 'local-storage';
 function firePost(url,action){
     axios.post(url,action).then(function (response) { 
         
-        console.log(response.data.token);
+     
        
-        console.log(response.data.user);
+     
         this.props.verifying(response.data.token,response.data.user);
         return response;
          })
@@ -35,16 +35,14 @@ function login(state =[], action){
         
         
         action.info.then((res)=>{
-            console.log("jwt");
-            console.log(res.data.filedata);
-         
+          
            localstorage.set('token',res.data.token);
            localstorage.set('user',res.data.user);
            localstorage.set('filedata',res.data.filedata);
         }
     )
            
-            console.log(localstorage.get('token'));
+            
             const newState = JSON.parse(JSON.stringify(state));
             return [{...newState[0],verified:true,
             token:localstorage.get('token'),

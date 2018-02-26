@@ -28,10 +28,16 @@ const  Register = React.createClass({
       
     return(
            <div>
-               
+               <div style={{"display":"flex", "flexDirection":"row"}}>
+                    <img src={require('../images/logo.png')} style={{"height":"34px","width":"140px","marginLeft":"550px"}}/>
+                    </div>
+                    <hr/>
+                    
+                    <div style={{"display":"flex", "flexDirection":"row"}}>
+                     <img src={require('../images/dropbox_1.png')} style={{"height":"288px","width": "301px", "marginLeft":"200px"}}/>  
             
             {this.divForSuccessAndFailure()}
-            <div className="col-md-2 col-md-offset-7">
+            <div className="col-md-2 col-md-offset-3">
            <form ref="registerform" onSubmit={this.handleSubmit}>
             <input type="text" ref="firstname" placeholder="First Name" style={{"height":"30px","width":"270px","margin":"10px"}}/>
             <input type="text" ref="lastname" placeholder="Last Name" style={{"height":"30px","width":"270px","margin":"10px"}}/>
@@ -40,6 +46,7 @@ const  Register = React.createClass({
             <input type="submit" value="submit" style={{"height":"30px","width":"270px","margin":"10px","background-color":"#1167fb","color":"white"}}/>
             
             </form>
+            </div>
             </div>
             </div>
            
