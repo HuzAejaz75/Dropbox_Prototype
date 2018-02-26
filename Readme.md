@@ -12,3 +12,7 @@
 
 ![groups](https://user-images.githubusercontent.com/22604867/36648650-ed083126-1a4a-11e8-9a3d-479181b8f3ca.jpg)
 
+### Permissions Page
+
+![permissions](https://user-images.githubusercontent.com/22604867/36648673-593aa324-1a4b-11e8-9f64-dab6d578f1b9.jpg)
+
