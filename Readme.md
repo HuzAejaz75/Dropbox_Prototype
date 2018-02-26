@@ -3,6 +3,7 @@
 Backend:
 1. Run command npm install
 2. Run command npm start
+
 Frontend:
 1. Navigate to the folder client
 2. Run command npm install
